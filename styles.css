@@ -1,0 +1,1644 @@
+/* =========================================================
+   LUX ROSARII — A candlelit chapel at twilight.
+   Refined typography, warm atmosphere, generous space.
+   ========================================================= */
+
+:root {
+  /* Warm, layered dark — never pure black. Reads like aged paper at night. */
+  --bg:           #0b0907;
+  --bg-deep:      #06040a;
+  --bg-frame:     #050302;
+
+  /* Cream text, warm taupe muted, antique gold accents */
+  --text:         #ece1c6;
+  --text-soft:    #d5c6a0;
+  --text-muted:   #968465;
+  --text-faint:   #5a4f3c;
+
+  --gold:         #c9a961;
+  --gold-soft:    #d8be7d;
+  --gold-deep:    #8b7237;
+  --gold-shadow:  #3a2c14;
+
+  --bead-inactive: #2c2820;
+  --bead-active:   #f7eccd;
+
+  --serif:   "EB Garamond", Georgia, "Times New Roman", serif;
+  --display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bead: fill 0.6s var(--ease-soft), stroke 0.6s var(--ease-soft), filter 0.6s var(--ease-soft);
+  --transition-fade: opacity 0.8s ease-out;
+
+  /* User-adjustable scales (set via JS and persisted). */
+  --font-scale:  1;
+  --image-scale: 1;
+
+  /* Vertical reservation for the announcement painting fitter. */
+  --painting-reserve: 540px;
+  --painting-cap: 50vh;
+  --painting-fit-buffer: 60;
+}
+
+/* ---------------------------------------------------------
+   Reset
+   --------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.65;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "kern", "liga", "calt", "onum";
+}
+
+body { overflow-x: hidden; }
+
+a {
+  color: var(--gold);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+a:hover { border-bottom-color: var(--gold); }
+
+button {
+  font-family: var(--serif);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: inherit;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+/* Hairline ornamental dividers used to set off sections on the home page. */
+.rule {
+  display: block;
+  width: 90px;
+  height: 1px;
+  margin: 0 auto;
+  background: linear-gradient(to right, transparent, var(--gold-deep), transparent);
+  border: 0;
+}
+.rule.rule-wide { width: 220px; }
+.rule.rule-tight { width: 56px; }
+
+/* Small flourish — golden fleuron-like ornament for section breaks. */
+.fleuron {
+  display: block;
+  text-align: center;
+  font-family: var(--display);
+  color: var(--gold-deep);
+  font-size: 22px;
+  letter-spacing: 0.4em;
+  margin: 0 auto;
+  line-height: 1;
+  user-select: none;
+}
+
+/* =========================================================
+   HOME PAGE
+   ========================================================= */
+
+/* Warm radial bloom from upper center — like sunlight through a chapel
+   window. Layered with the very faint Mary silhouette below. */
+.home-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    radial-gradient(ellipse at 50% 18%, rgba(201, 169, 97, 0.085), transparent 55%),
+    radial-gradient(ellipse at 50% 90%, rgba(60, 40, 20, 0.55), transparent 60%),
+    url("assets/mary-background.jpg");
+  background-color: var(--bg);
+  background-position: center center, center center, center 28%;
+  background-repeat: no-repeat;
+  background-size: cover, cover, cover;
+  background-attachment: fixed;
+  pointer-events: none;
+}
+.home-bg::after {
+  /* Apply a low opacity to the photograph only, while keeping the gradients full strength. */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(11, 9, 7, 0.78);
+  pointer-events: none;
+}
+
+.home-wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 80px 32px 120px;
+  text-align: center;
+}
+
+/* Masthead --------------------------------------------------- */
+
+.home-mast {
+  margin-bottom: 70px;
+}
+
+.site-title {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(58px, 9vw, 102px);
+  line-height: 1;
+  margin: 0;
+  color: var(--text);
+  letter-spacing: 0.005em;
+  position: relative;
+}
+
+/* Today's mystery — the hero card ----------------------------- */
+
+.today-card {
+  margin: 0 auto;
+  padding: 44px 36px 38px;
+  max-width: 580px;
+  background:
+    linear-gradient(to bottom, rgba(20, 15, 10, 0.55), rgba(8, 6, 4, 0.75));
+  border-top:    1px solid rgba(201, 169, 97, 0.35);
+  border-bottom: 1px solid rgba(201, 169, 97, 0.35);
+  position: relative;
+}
+/* Decorative gold "corner brackets" at the four corners of the card —
+   chapel-program feel. */
+.today-card::before,
+.today-card::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--gold);
+  pointer-events: none;
+}
+.today-card::before { top: -1px; left: -1px;  border-right: 0; border-bottom: 0; }
+.today-card::after  { top: -1px; right: -1px; border-left: 0; border-bottom: 0; }
+.today-card .corner-bl,
+.today-card .corner-br {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--gold);
+  pointer-events: none;
+}
+.today-card .corner-bl { bottom: -1px; left: -1px;  border-right: 0; border-top: 0; }
+.today-card .corner-br { bottom: -1px; right: -1px; border-left: 0;  border-top: 0; }
+
+.today-date {
+  font-family: var(--serif);
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.36em;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin: 0 0 14px;
+}
+
+.today-label {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 0 0 4px;
+  letter-spacing: 0.04em;
+}
+
+.today-mystery {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(36px, 4.8vw, 54px);
+  font-weight: 400;
+  color: var(--gold);
+  margin: 0 0 12px;
+  line-height: 1.05;
+  letter-spacing: 0.005em;
+}
+
+
+/* "Pray a different mystery" — toggle reveals the four pill options. */
+.mystery-toggle {
+  display: inline-block;
+  margin-top: 24px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: color 0.3s ease, letter-spacing 0.3s ease;
+}
+.mystery-toggle:hover { color: var(--gold); letter-spacing: 0.16em; }
+.mystery-toggle .arr {
+  display: inline-block;
+  margin-left: 6px;
+  transition: transform 0.3s var(--ease-soft);
+}
+.mystery-toggle[aria-expanded="true"] .arr { transform: rotate(90deg); }
+
+.mystery-options {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.45s var(--ease-soft);
+}
+.mystery-options.is-open { grid-template-rows: 1fr; }
+.mystery-options-inner {
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding-top: 18px;
+}
+.mystery-option {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--text-soft);
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(201, 169, 97, 0.35);
+  padding: 9px 22px;
+  letter-spacing: 0.06em;
+  transition:
+    border-color 0.3s ease,
+    color 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.mystery-option:hover,
+.mystery-option.is-active {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(201, 169, 97, 0.05);
+  box-shadow: 0 0 22px rgba(201, 169, 97, 0.08);
+}
+
+/* Begin button — the doorway -------------------------------- */
+
+.begin-btn {
+  display: inline-block;
+  margin-top: 44px;
+  padding: 18px 64px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--gold);
+  background: transparent;
+  border: 1px solid var(--gold);
+  letter-spacing: 0.05em;
+  position: relative;
+  transition: background 0.5s var(--ease-soft),
+              color 0.5s var(--ease-soft),
+              box-shadow 0.6s var(--ease-soft),
+              letter-spacing 0.4s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+.begin-btn::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border: 1px solid rgba(201, 169, 97, 0.18);
+  pointer-events: none;
+  transition: inset 0.5s var(--ease-soft), border-color 0.5s ease;
+}
+.begin-btn:hover,
+.begin-btn:focus-visible {
+  background: rgba(201, 169, 97, 0.09);
+  color: var(--gold-soft);
+  box-shadow: 0 0 60px rgba(201, 169, 97, 0.16);
+  outline: none;
+  letter-spacing: 0.08em;
+  border-bottom-color: var(--gold);
+}
+.begin-btn:hover::before { inset: -8px; border-color: rgba(201, 169, 97, 0.32); }
+
+/* The contemplative passage that follows the call to action. */
+.invitation {
+  margin: 70px auto 0;
+  max-width: 600px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.85;
+  color: var(--text-soft);
+  text-align: center;
+  opacity: 0.9;
+}
+.invitation p { margin: 0; }
+.invitation p + p { margin-top: 14px; }
+
+/* Pope's monthly intention ----------------------------------- */
+
+.pope-intention {
+  margin: 60px auto 0;
+  max-width: 600px;
+  text-align: center;
+}
+.pope-intention-heading {
+  font-family: var(--serif);
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.32em;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin: 0 0 16px;
+}
+.pope-intention-month {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 12px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  margin: 0 0 10px;
+}
+.pope-intention-title {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(20px, 2vw, 26px);
+  color: var(--gold);
+  margin: 0 0 14px;
+  line-height: 1.3;
+}
+.pope-intention-text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-soft);
+  margin: 0 auto;
+  max-width: 480px;
+}
+
+/* Footer motto */
+.home-footer {
+  margin-top: 90px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 11px;
+  color: var(--text-faint);
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   PRAYER PAGE — full-bleed contemplation
+   ========================================================= */
+
+.prayer-page {
+  background: var(--bg);
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Subtle warm vignette around the stage — pulls the eye toward center. */
+.prayer-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at center, transparent 0%, transparent 50%, rgba(0, 0, 0, 0.55) 100%),
+    radial-gradient(ellipse at 50% 0%, rgba(201, 169, 97, 0.04), transparent 60%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Top corners — exit + settings ----------------------------- */
+
+.top-right {
+  position: fixed;
+  top: 18px;
+  right: 22px;
+  z-index: 12;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: opacity 0.9s var(--ease-soft);
+}
+
+.exit-link {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-family: var(--serif);
+  font-style: italic;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: none;
+  padding: 4px 0;
+  transition: color 0.3s ease;
+}
+.exit-link:hover { color: var(--gold); border-bottom: none; }
+
+/* Settings gear */
+.settings-btn {
+  position: fixed;
+  top: 18px;
+  left: 22px;
+  z-index: 12;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid rgba(201, 169, 97, 0.3);
+  border-radius: 50%;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.3s ease, border-color 0.3s ease, transform 0.6s var(--ease-soft), opacity 0.9s var(--ease-soft);
+}
+.settings-btn svg { width: 16px; height: 16px; }
+.settings-btn:hover { color: var(--gold); border-color: var(--gold); }
+.settings-btn[aria-expanded="true"] {
+  color: var(--gold);
+  border-color: var(--gold);
+  transform: rotate(90deg);
+}
+
+/* Keyboard legend ------------------------------------------ */
+
+.kb-hint {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: rgba(184, 168, 136, 0.4);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  z-index: 5;
+  pointer-events: none;
+  text-align: center;
+  white-space: nowrap;
+  transition: opacity 0.4s ease;
+  font-family: var(--serif);
+}
+.kb-hint.is-hidden { opacity: 0; pointer-events: none; }
+
+.kb-hint-toggle {
+  position: fixed;
+  bottom: 14px;
+  right: 16px;
+  z-index: 11;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--display);
+  font-size: 16px;
+  line-height: 1;
+  color: rgba(184, 168, 136, 0.5);
+  background: transparent;
+  border: 1px solid rgba(201, 169, 97, 0.22);
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.3s ease, border-color 0.3s ease, opacity 0.9s var(--ease-soft);
+}
+.kb-hint-toggle:hover { color: var(--gold); border-color: var(--gold); }
+
+/* Progress bar at very bottom ------------------------------- */
+
+.progress-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(201, 169, 97, 0.05);
+  z-index: 6;
+  pointer-events: none;
+  transition: opacity 0.9s var(--ease-soft);
+}
+.progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(to right, var(--gold-deep), var(--gold), var(--gold-soft));
+  box-shadow: 0 0 14px rgba(201, 169, 97, 0.45);
+  transition: width 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* =========================================================
+   ROSARY CORNER WIDGET
+   ========================================================= */
+
+.rosary-corner {
+  position: fixed;
+  bottom: 18px;
+  left: 18px;
+  width: 138px;
+  height: 168px;
+  z-index: 10;
+  opacity: 0.95;
+  transition: opacity 1.2s var(--ease-soft);
+}
+.rosary-corner svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.6));
+}
+
+.bead {
+  fill: var(--bead-inactive);
+  transition: var(--transition-bead);
+}
+.bead.active {
+  fill: var(--bead-active);
+  filter: drop-shadow(0 0 7px var(--gold));
+  /* A slow, candle-like breath on the active bead — a quiet rhythm to
+     pray by. Disabled under prefers-reduced-motion (see bottom of file). */
+  animation: bead-breath 4.8s var(--ease-soft) infinite;
+}
+@keyframes bead-breath {
+  0%, 100% { filter: drop-shadow(0 0 5px var(--gold)); }
+  50%      { filter: drop-shadow(0 0 11px var(--gold-soft)); }
+}
+
+.cross-shape {
+  stroke: rgba(160, 138, 92, 0.7);
+  stroke-width: 2;
+  stroke-linecap: round;
+  fill: none;
+  transition: var(--transition-bead);
+}
+.cross-shape.active {
+  stroke: var(--bead-active);
+  filter: drop-shadow(0 0 7px var(--gold));
+}
+
+.medallion {
+  fill: var(--gold-deep);
+  stroke: var(--gold);
+  stroke-width: 0.8;
+  filter: drop-shadow(0 0.8px 1.5px rgba(0, 0, 0, 0.55));
+  transition: var(--transition-bead);
+}
+.medallion.active {
+  fill: var(--bead-active);
+  stroke: var(--gold);
+  filter: drop-shadow(0 0 9px var(--gold));
+}
+.medallion-detail line {
+  stroke: rgba(0, 0, 0, 0.5);
+  stroke-width: 0.7;
+  stroke-linecap: round;
+  pointer-events: none;
+  transition: stroke 0.5s var(--ease-soft);
+}
+.medallion.active ~ .medallion-detail line { stroke: var(--gold-deep); }
+
+.connector {
+  stroke: rgba(201, 169, 97, 0.3);
+  stroke-width: 0.5;
+  fill: none;
+}
+
+.bead-target {
+  fill: transparent;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.bead.is-hover:not(.active) {
+  fill: rgba(255, 255, 255, 0.45);
+  filter: drop-shadow(0 0 6px var(--gold));
+}
+.medallion.is-hover:not(.active) {
+  fill: rgba(255, 255, 255, 0.45);
+  stroke: rgba(255, 255, 255, 0.7);
+  filter: drop-shadow(0 0 7px var(--gold));
+}
+.cross-shape.is-hover:not(.active) {
+  stroke: rgba(255, 255, 255, 0.55);
+  filter: drop-shadow(0 0 6px var(--gold));
+}
+
+/* =========================================================
+   STAGE
+   ========================================================= */
+
+.stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: safe center;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 72px 80px 200px;
+  z-index: 2;
+}
+
+.stage-inner {
+  width: 100%;
+  max-width: 920px;
+  text-align: center;
+  opacity: 1;
+  animation: stage-fade 0.7s var(--ease-soft);
+}
+
+@keyframes stage-fade {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Labels — small caps, gold-deep underline ornament -------- */
+
+.prayer-label {
+  font-family: var(--serif);
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.32em;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0 0 28px;
+  position: relative;
+  display: inline-block;
+  padding: 0 24px;
+}
+.prayer-label::before,
+.prayer-label::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 30px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold-deep), transparent);
+}
+.prayer-label::before { right: 100%; }
+.prayer-label::after  { left: 100%; transform: scaleX(-1); }
+
+.prayer-text {
+  font-family: var(--serif);
+  font-size: calc(clamp(22px, 2.6vw, 34px) * var(--font-scale, 1));
+  line-height: 1.7;
+  color: var(--text);
+  margin: 0 auto;
+  max-width: 820px;
+  font-weight: 400;
+}
+.prayer-text em {
+  color: var(--gold);
+  font-style: italic;
+}
+
+/* Long prayers (Creed, Hail Holy Queen, etc.) — each clause on a line. */
+.prayer-text.long {
+  font-size: calc(clamp(19px, 2.1vw, 26px) * var(--font-scale, 1));
+  line-height: 1.55;
+  max-width: 880px;
+}
+.prayer-text.long .prose-line {
+  display: block;
+  margin: 0 auto 0.55em;
+  max-width: 760px;
+}
+.prayer-text.long .prose-line:last-child { margin-bottom: 0; }
+
+.prayer-note {
+  margin-top: 26px;
+  font-style: italic;
+  font-size: clamp(14px, 1.35vw, 17px);
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+/* ----- Call & response: leader / group, for praying together -----
+   No labels, no rules — the prayer reads as one continuous line and the
+   only distinction is colour: the leader's words in the normal cream,
+   the group's response in warm gold. */
+
+.prayer-resp { color: var(--gold-soft); }
+
+/* Glory Be + Fatima share one screen — two prayers, gently spaced. */
+.glory-fatima {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* In-decade Hail Mary count — italic gold display "n of 10" */
+.prayer-label.hm-count-label {
+  color: var(--gold);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: calc(clamp(20px, 2vw, 26px) * var(--font-scale, 1));
+  letter-spacing: 0.06em;
+  text-transform: none;
+  margin-bottom: 22px;
+  padding: 0;
+}
+.prayer-label.hm-count-label::before,
+.prayer-label.hm-count-label::after { display: none; }
+.prayer-label.hm-count-label .hm-divider {
+  color: var(--text-muted);
+  font-style: italic;
+  margin: 0 8px;
+  font-size: 0.7em;
+  vertical-align: 1px;
+}
+
+/* =========================================================
+   IN-DECADE LAYOUT — painting + prayer side by side
+   ========================================================= */
+
+.with-decade {
+  width: 100%;
+  max-width: 1240px;
+}
+
+.decade-layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 44%) 1fr;
+  gap: 56px;
+  align-items: center;
+  text-align: left;
+}
+
+.painting-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+
+.prayer-side { text-align: left; }
+
+.prayer-side > .prayer-label,
+.prayer-side > .prayer-text,
+.prayer-side > .glory-fatima {
+  animation: prayer-fade-in 0.55s var(--ease-soft);
+}
+.prayer-side.just-updated > .prayer-label,
+.prayer-side.just-updated > .prayer-text,
+.prayer-side.just-updated > .glory-fatima {
+  animation: prayer-fade-in 0.55s var(--ease-soft);
+}
+
+@keyframes prayer-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.prayer-side .prayer-label,
+.prayer-side .prayer-text { text-align: left; margin-left: 0; }
+.prayer-side .prayer-label::before,
+.prayer-side .prayer-label::after { display: none; }
+.prayer-side .prayer-label { padding: 0; }
+
+/* Decade banner above the painting */
+.decade-banner {
+  font-family: var(--display);
+  font-style: italic;
+  text-align: center;
+  line-height: 1.15;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+.decade-banner .db-num {
+  font-family: var(--serif);
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.36em;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.decade-banner .db-name {
+  font-size: clamp(22px, 2.5vw, 30px);
+  color: var(--gold);
+  letter-spacing: 0.01em;
+}
+
+/* =========================================================
+   MYSTERY ANNOUNCEMENT
+   ========================================================= */
+
+.announce {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  max-width: 1240px;
+}
+
+.announce-body {
+  display: grid;
+  grid-template-columns: minmax(300px, 1fr) 1fr;
+  gap: 56px;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+}
+.announce-painting {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.announce-painting .painting-frame { max-width: 100%; }
+.announce-text {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.announce-decade {
+  font-family: var(--serif);
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.36em;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.announce-name {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: calc(clamp(40px, 5.4vw, 72px) * var(--font-scale, 1));
+  color: var(--gold);
+  line-height: 1.05;
+  margin: 0;
+  letter-spacing: 0.005em;
+}
+
+.announce-fruit {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(14px, 1.4vw, 17px);
+  color: var(--text-soft);
+  margin: 0 0 8px;
+  letter-spacing: 0.04em;
+}
+.announce-fruit::before {
+  content: "Fruit · ";
+  color: var(--text-muted);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.7em;
+  margin-right: 4px;
+  vertical-align: 0.12em;
+}
+
+/* =========================================================
+   PAINTING FRAME — refined gilt
+   ========================================================= */
+
+.painting-frame {
+  border: 4px solid var(--gold);
+  background: var(--bg-frame);
+  padding: 5px;
+  box-shadow:
+    inset 0 0 0 1px var(--gold-shadow),
+    0 0 0 1px var(--gold-shadow),
+    0 0 0 6px var(--gold-deep),
+    0 0 0 7px var(--gold-shadow),
+    0 22px 60px rgba(0, 0, 0, 0.68),
+    0 0 80px rgba(201, 169, 97, 0.07);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: calc(min(64vw, 720px) * var(--image-scale, 1));
+  margin: 4px auto;
+  position: relative;
+  transition: max-width 0.4s ease, var(--transition-fade);
+}
+
+.painting-frame img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(max(180px, min(var(--painting-cap, 50vh), calc(100vh - var(--painting-reserve, 540px)))) * var(--image-scale, 1));
+  object-fit: contain;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.7s ease-out;
+  cursor: zoom-in;
+}
+.painting-frame.is-loaded img { opacity: 1; }
+
+.painting-frame { view-transition-name: rosary-painting; }
+::view-transition-old(rosary-painting),
+::view-transition-new(rosary-painting) {
+  animation-duration: 0.65s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.4s;
+  animation-timing-function: ease-out;
+}
+
+/* In-decade painting frame (same rim, slightly smaller envelope). */
+.painting-frame.painting-frame-side {
+  max-width: calc(min(44vw, 540px) * var(--image-scale, 1));
+}
+.painting-frame.painting-frame-side img {
+  max-height: calc(max(180px, min(64vh, calc(100vh - 280px))) * var(--image-scale, 1));
+}
+
+.painting-fallback {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  min-width: 280px;
+  min-height: 260px;
+  text-align: center;
+}
+.painting-frame.has-fallback img { display: none; }
+.painting-frame.has-fallback .painting-fallback { display: flex; }
+.painting-fallback .pf-title {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 22px;
+  color: var(--gold);
+}
+.painting-fallback .pf-artist {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--text-muted);
+}
+
+/* Scripture & quote — italic, with discreet refs ----------- */
+
+.announce-scripture {
+  font-family: var(--serif);
+  font-size: calc(clamp(15px, 1.55vw, 19px) * var(--font-scale, 1));
+  line-height: 1.7;
+  color: var(--text);
+  max-width: 820px;
+  margin: 10px 0 0;
+  font-style: italic;
+}
+.announce-scripture .ref {
+  font-style: italic;
+  color: var(--gold);
+  margin-right: 12px;
+  letter-spacing: 0.04em;
+  font-size: 0.85em;
+}
+
+.announce-quote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: calc(clamp(14px, 1.45vw, 18px) * var(--font-scale, 1));
+  line-height: 1.75;
+  color: var(--text-soft);
+  max-width: 820px;
+  margin: 0;
+  padding-top: 16px;
+  border-top: 1px solid rgba(201, 169, 97, 0.14);
+}
+.announce-quote .author {
+  font-style: normal;
+  color: var(--gold);
+  margin-right: 10px;
+  font-size: 0.9em;
+  letter-spacing: 0.04em;
+}
+.announce-quote .author::before { content: "— "; opacity: 0.7; }
+
+/* Versicle (leader / response) ------------------------------ */
+.versicle {
+  font-family: var(--serif);
+  font-size: calc(clamp(20px, 2.2vw, 28px) * var(--font-scale, 1));
+  line-height: 1.7;
+}
+.versicle-line { margin: 0 0 14px; }
+
+/* The versicle sits on the same screen as the Hail, Holy Queen — a thin
+   gold hairline gently joins the prayer to its response. */
+.hhq-versicle {
+  margin-top: 34px;
+  padding-top: 30px;
+  position: relative;
+  font-size: calc(clamp(17px, 1.9vw, 23px) * var(--font-scale, 1));
+}
+.hhq-versicle::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold-deep), transparent);
+}
+.versicle-line .speaker {
+  color: var(--gold);
+  font-style: italic;
+  margin-right: 14px;
+  font-size: 0.8em;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+/* =========================================================
+   END SCREEN
+   ========================================================= */
+
+.end-amen {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(70px, 11vw, 140px);
+  color: var(--gold);
+  margin: 0;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+.end-tagline {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--text-muted);
+  margin: 28px 0 0;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+.end-link {
+  display: inline-block;
+  margin-top: 56px;
+  font-size: 14px;
+  color: var(--text-muted);
+  font-family: var(--serif);
+  font-style: italic;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(201, 169, 97, 0.4);
+  padding-bottom: 4px;
+}
+.end-link:hover {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+/* =========================================================
+   PAINTING LIGHTBOX
+   ========================================================= */
+
+.painting-lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.96);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  cursor: zoom-out;
+  animation: lightbox-in 0.35s var(--ease-soft);
+}
+.painting-lightbox.closing {
+  animation: lightbox-out 0.22s ease-in forwards;
+  pointer-events: none;
+}
+@keyframes lightbox-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes lightbox-out { to { opacity: 0; } }
+
+.painting-lightbox img {
+  max-width: 92vw;
+  max-height: calc(100vh - 230px);
+  object-fit: contain;
+  border: 4px solid var(--gold);
+  padding: 5px;
+  background: var(--bg-frame);
+  box-shadow:
+    inset 0 0 0 1px var(--gold-shadow),
+    0 0 0 1px var(--gold-shadow),
+    0 0 0 6px var(--gold-deep),
+    0 0 0 7px var(--gold-shadow),
+    0 30px 100px rgba(0, 0, 0, 0.8),
+    0 0 100px rgba(201, 169, 97, 0.08);
+}
+
+.painting-lightbox-caption {
+  margin-top: 30px;
+  text-align: center;
+  pointer-events: none;
+  max-width: 80vw;
+}
+.painting-lightbox-caption strong {
+  display: block;
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(22px, 2.4vw, 30px);
+  color: var(--gold);
+  line-height: 1.2;
+}
+.painting-lightbox-caption span {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(13px, 1.3vw, 16px);
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+.painting-lightbox-hint {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--serif);
+  font-size: 11px;
+  color: rgba(184, 168, 136, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin: 0;
+}
+
+.painting-lightbox-close {
+  position: absolute;
+  top: 24px;
+  right: 28px;
+  background: transparent;
+  border: 1px solid rgba(201, 169, 97, 0.6);
+  color: var(--gold);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  font-size: 14px;
+  font-family: var(--serif);
+  cursor: pointer;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+.painting-lightbox-close:hover {
+  background: rgba(201, 169, 97, 0.1);
+  border-color: var(--gold);
+}
+
+/* =========================================================
+   SAINT-OF-THE-DAY BIO
+   ========================================================= */
+
+.saint-bio {
+  margin: 36px auto 0;
+  max-width: 720px;
+  text-align: left;
+  font-family: var(--serif);
+}
+.saint-bio-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.saint-bio-name {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(19px, 1.9vw, 23px);
+  color: var(--gold);
+}
+.saint-bio-lived {
+  font-style: italic;
+  font-size: 13px;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+}
+.saint-bio-intro {
+  text-align: center;
+  font-style: italic;
+  font-size: clamp(14px, 1.3vw, 16px);
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 10px 0 0;
+}
+.saint-bio-more { margin-top: 18px; text-align: center; }
+.saint-bio-more summary {
+  display: inline-block;
+  cursor: pointer;
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border: 1px solid rgba(201, 169, 97, 0.32);
+  padding: 7px 18px;
+  transition: border-color 0.3s ease, color 0.3s ease, background 0.3s ease;
+  user-select: none;
+}
+.saint-bio-more summary::-webkit-details-marker { display: none; }
+.saint-bio-more summary:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+  background: rgba(201, 169, 97, 0.05);
+}
+.saint-bio-more[open] summary { color: var(--gold); border-color: var(--gold); }
+.saint-bio-body {
+  margin-top: 22px;
+  text-align: left;
+  font-size: clamp(14px, 1.25vw, 16px);
+  line-height: 1.7;
+  color: var(--text);
+  animation: stage-fade 0.4s var(--ease-soft);
+}
+.saint-bio-body p { margin: 0 0 14px; }
+.saint-bio-body p:last-child { margin-bottom: 0; }
+.saint-bio-link a {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.saint-bio-link a:hover { color: var(--gold); }
+
+/* =========================================================
+   SETTINGS PANEL
+   ========================================================= */
+
+.settings-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 99;
+  animation: stage-fade 0.3s ease-out;
+}
+
+.settings-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  width: min(460px, calc(100vw - 40px));
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+  background: linear-gradient(to bottom, #0e0b08, #07050a);
+  border: 1px solid rgba(201, 169, 97, 0.32);
+  box-shadow:
+    0 0 0 1px var(--gold-shadow),
+    0 30px 80px rgba(0, 0, 0, 0.8),
+    0 0 60px rgba(201, 169, 97, 0.06);
+  padding: 30px 36px 34px;
+  color: var(--text);
+  font-family: var(--serif);
+  animation: settings-in 0.35s var(--ease-soft);
+}
+@keyframes settings-in {
+  from { opacity: 0; transform: translate(-50%, calc(-50% + 14px)); }
+  to   { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(201, 169, 97, 0.2);
+}
+.settings-header h2 {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 26px;
+  color: var(--gold);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+.settings-close {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.3s ease;
+}
+.settings-close:hover { color: var(--gold); }
+
+.settings-section { margin-bottom: 26px; }
+.settings-section:last-child { margin-bottom: 0; }
+.settings-section h3 {
+  font-family: var(--serif);
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-size: 10px;
+  color: var(--text-muted);
+  margin: 0 0 16px;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  gap: 16px;
+}
+.settings-row:last-child { margin-bottom: 0; }
+.settings-row label { font-size: 15px; color: var(--text); }
+.settings-row-speed { flex-wrap: wrap; }
+
+.settings-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.settings-stepper button {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid rgba(201, 169, 97, 0.3);
+  border-radius: 50%;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--serif);
+  line-height: 1;
+  padding: 0;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.settings-stepper button:hover { color: var(--gold); border-color: var(--gold); }
+.settings-value {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--gold);
+  min-width: 48px;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+.settings-reset {
+  background: transparent;
+  border: 1px solid rgba(201, 169, 97, 0.3);
+  color: var(--text-muted);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13px;
+  padding: 7px 20px;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+}
+.settings-reset:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+  background: rgba(201, 169, 97, 0.05);
+}
+
+.settings-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: var(--serif);
+  padding: 0;
+}
+.settings-toggle-track {
+  display: inline-block;
+  width: 40px;
+  height: 21px;
+  background: rgba(60, 50, 30, 0.5);
+  border: 1px solid rgba(201, 169, 97, 0.3);
+  border-radius: 12px;
+  position: relative;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+.settings-toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 15px;
+  height: 15px;
+  background: var(--text-muted);
+  border-radius: 50%;
+  transition: left 0.3s var(--ease-soft), background 0.3s ease;
+}
+.settings-toggle-label {
+  font-style: italic;
+  font-size: 13px;
+  min-width: 26px;
+}
+.settings-toggle-btn[aria-pressed="true"] .settings-toggle-track {
+  background: rgba(201, 169, 97, 0.22);
+  border-color: var(--gold);
+}
+.settings-toggle-btn[aria-pressed="true"] .settings-toggle-thumb {
+  left: 21px;
+  background: var(--gold);
+}
+.settings-toggle-btn[aria-pressed="true"] .settings-toggle-label { color: var(--gold); }
+
+.settings-segmented {
+  display: inline-flex;
+  border: 1px solid rgba(201, 169, 97, 0.3);
+  overflow: hidden;
+}
+.settings-segmented button {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--serif);
+  font-size: 13px;
+  font-style: italic;
+  padding: 7px 18px;
+  cursor: pointer;
+  border-right: 1px solid rgba(201, 169, 97, 0.18);
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.settings-segmented button:last-child { border-right: none; }
+.settings-segmented button:hover { color: var(--gold); }
+.settings-segmented button[aria-checked="true"] {
+  color: var(--bg);
+  background: var(--gold);
+}
+
+.settings-hint {
+  font-style: italic;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.55;
+  margin: 14px 0 0;
+  opacity: 0.85;
+}
+
+body.auto-advancing .progress-bar-fill {
+  background: linear-gradient(to right, var(--gold-deep), var(--gold), var(--gold-soft));
+}
+
+/* =========================================================
+   IMMERSIVE IDLE MODE
+   When stillness settles, everything but the prayer and the painting
+   dissolves away — even the cursor. The faintest motion brings it back.
+   ========================================================= */
+
+body.is-immersed { cursor: none; }
+
+body.is-immersed .settings-btn,
+body.is-immersed .top-right,
+body.is-immersed .kb-hint,
+body.is-immersed .kb-hint-toggle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Orientation aids don't vanish entirely — they recede to a whisper so a
+   glance still finds them, but they no longer pull at the eye. */
+body.is-immersed .rosary-corner { opacity: 0.12; }
+body.is-immersed .progress-bar  { opacity: 0; }
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .decade-layout {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    text-align: center;
+  }
+  .prayer-side,
+  .prayer-side .prayer-label,
+  .prayer-side .prayer-text { text-align: center; }
+  .painting-frame.painting-frame-side {
+    max-width: calc(min(78vw, 420px) * var(--image-scale, 1));
+  }
+  .painting-frame.painting-frame-side img {
+    max-height: calc(38vh * var(--image-scale, 1));
+  }
+  .announce-body {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    text-align: center;
+  }
+  .announce-text { align-items: center; }
+}
+
+@media (max-width: 720px) {
+  .home-wrap { padding: 60px 22px 90px; }
+  .today-card { padding: 36px 24px 30px; max-width: 100%; }
+  .stage { padding: 32px 26px 170px; }
+  .rosary-corner {
+    width: 100px;
+    height: 124px;
+    bottom: 12px;
+    left: 12px;
+  }
+  .painting-frame {
+    max-width: 86vw;
+    border-width: 3px;
+    box-shadow:
+      inset 0 0 0 1px var(--gold-shadow),
+      0 0 0 1px var(--gold-shadow),
+      0 0 0 4px var(--gold-deep),
+      0 0 0 5px var(--gold-shadow),
+      0 12px 30px rgba(0, 0, 0, 0.6);
+  }
+  .painting-frame img { max-height: calc(38vh * var(--image-scale, 1)); }
+  .kb-hint { display: none; }
+  .top-right { gap: 10px; right: 14px; top: 14px; }
+}
+
+@media (max-width: 500px), (max-height: 500px) {
+  .stage { padding: 20px 18px 60px; }
+  .rosary-corner { display: none; }
+  .progress-bar { display: none; }
+  .kb-hint { display: none; }
+}
+
+@media (min-width: 1920px) {
+  .stage-inner { max-width: 1000px; }
+  .with-decade { max-width: 1360px; }
+  .announce { max-width: 1220px; }
+}
+
+@media (max-height: 1000px) {
+  :root { --painting-reserve: 460px; --painting-cap: 55vh; }
+  .stage { padding-top: 40px; padding-bottom: 190px; }
+  .announce { gap: 11px; }
+  .announce-decade { font-size: 11px; margin: 0 0 4px; }
+  .announce-name { font-size: calc(clamp(30px, 4vw, 50px) * var(--font-scale, 1)); }
+  .announce-fruit { font-size: 13px; }
+  .announce-scripture,
+  .announce-quote {
+    font-size: calc(clamp(13px, 1.3vw, 16px) * var(--font-scale, 1));
+    line-height: 1.55;
+  }
+}
+
+@media (max-height: 800px) and (max-width: 1500px) {
+  :root {
+    --painting-reserve: 400px;
+    --painting-cap: 56vh;
+    --painting-fit-buffer: 25;
+  }
+  .stage { padding-top: 34px; padding-bottom: 156px; }
+  .announce { gap: 14px; }
+  .announce-decade { font-size: 11px; margin: 0; }
+  .announce-name { font-size: calc(clamp(26px, 3.2vw, 38px) * var(--font-scale, 1)); }
+  .announce-fruit { font-size: 13px; margin: 0; }
+  .announce-scripture, .announce-quote {
+    font-size: calc(clamp(13px, 1.3vw, 16px) * var(--font-scale, 1));
+    line-height: 1.5;
+  }
+  .prayer-text.long {
+    font-size: calc(clamp(15px, 1.8vw, 21px) * var(--font-scale, 1));
+    line-height: 1.45;
+  }
+  .prayer-text.long .prose-line { margin-bottom: 0.4em; }
+  .rosary-corner {
+    width: 110px;
+    height: 134px;
+    bottom: 12px;
+    left: 12px;
+  }
+}
+
+@media (max-height: 650px) {
+  :root { --painting-reserve: 340px; --painting-cap: 62vh; }
+  .stage { padding-top: 22px; padding-bottom: 130px; }
+  .announce { gap: 10px; }
+  .rosary-corner { width: 92px; height: 112px; }
+}
+
+/* Reduce motion -------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
