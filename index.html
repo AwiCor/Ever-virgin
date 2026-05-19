@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lux Rosarii — Light of the Rosary</title>
+  <meta name="description" content="A reverent, distraction-free guide for leading the Holy Rosary in groups, on video calls, or alone." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+
+  <script>
+    /* qutebrowser / QtWebEngine does not scale page content to a screen's
+       HiDPI setting (a long-standing Qt limitation), so on dense displays
+       everything renders small. Detect THAT engine only and compensate;
+       every other browser falls straight through, untouched. Tune or force
+       it anytime with ?zoom=1.5 (persists), or localStorage "lr.zoom". */
+    (function () {
+      try {
+        var d = document.documentElement;
+        var isQWE = /QtWebEngine/i.test(navigator.userAgent || "");
+        if (isQWE) d.className += (d.className ? " " : "") + "is-qtwebengine";
+
+        var override = null;
+        var m = location.search.match(/[?&]zoom=([0-9](?:\.[0-9]+)?)/);
+        if (m) { override = parseFloat(m[1]); try { localStorage.setItem("lr.zoom", m[1]); } catch (e) {} }
+        if (override == null) {
+          try { var ls = localStorage.getItem("lr.zoom"); if (ls != null) override = parseFloat(ls); } catch (e) {}
+        }
+
+        var scale = 1;
+        if (override != null && !isNaN(override)) {
+          scale = Math.min(2.5, Math.max(1, override));
+        } else if (isQWE && (window.devicePixelRatio || 1) <= 1.01) {
+          var sw = (window.screen && screen.width) || 0;
+          if (sw >= 2560) scale = Math.min(2, Math.max(1.25, Math.round((sw / 1440) * 20) / 20));
+        }
+        window.__lrScale = scale;
+
+        /* The home page is a normal scrollable document — safe to zoom the
+           whole page. The prayer page is sized through its own tested
+           text/painting-scale system instead (see app.js). */
+        var onPrayer = /prayer\.html$/i.test(location.pathname);
+        if (!onPrayer && scale > 1) d.style.zoom = scale;
+      } catch (e) { /* never let this break the page */ }
+    })();
+  </script>
+
+  <link rel="preload" as="image" href="assets/mary-background.jpg" />
+  <link rel="stylesheet" href="styles.css?v=36" />
+</head>
+<body>
+
+  <div class="home-bg" aria-hidden="true"></div>
+
+  <main class="home-wrap">
+
+    <header class="home-mast">
+      <h1 class="site-title">Lux Rosarii</h1>
+    </header>
+
+    <!-- Today's mystery — the hero card -->
+    <section class="today-card" aria-live="polite">
+      <span class="corner-bl" aria-hidden="true"></span>
+      <span class="corner-br" aria-hidden="true"></span>
+
+      <p class="today-date" id="today-date">Today</p>
+      <p class="today-label">Today's mystery</p>
+      <!-- Filled by JS with the correct mystery for today's day of the week.
+           Left blank so it never shows a misleading fixed mystery. -->
+      <h2 class="today-mystery" id="today-mystery-name"></h2>
+
+      <button type="button" class="mystery-toggle" id="mystery-toggle"
+              aria-expanded="false" aria-controls="mystery-options">
+        Pray a different mystery <span class="arr">›</span>
+      </button>
+
+      <div class="mystery-options" id="mystery-options" role="group" aria-label="Choose a mystery">
+        <div class="mystery-options-inner">
+          <button type="button" class="mystery-option" data-mystery="joyful">Joyful</button>
+          <button type="button" class="mystery-option" data-mystery="sorrowful">Sorrowful</button>
+          <button type="button" class="mystery-option" data-mystery="glorious">Glorious</button>
+          <button type="button" class="mystery-option" data-mystery="luminous">Luminous</button>
+        </div>
+      </div>
+    </section>
+
+    <a href="prayer.html" class="begin-btn" id="begin-btn">Begin Prayer</a>
+
+    <!-- Pope's intention for the current month — sourced from data/pope-intentions.json.
+         Hidden until JS confirms an entry matches today's year + month. -->
+    <section class="pope-intention" id="pope-intention" hidden>
+      <p class="pope-intention-heading">The Holy Father's Intention</p>
+      <p class="pope-intention-month" id="pope-intention-month"></p>
+      <p class="pope-intention-title" id="pope-intention-title"></p>
+      <p class="pope-intention-text" id="pope-intention-text"></p>
+    </section>
+
+    <section class="invitation">
+      <p><span class="versal">T</span>he Holy Rosary is an ancient prayer of the Church — a slow walk, with Mary, through the life of her Son.</p>
+      <p>Each decade gathers ten Hail Marys around a single mystery. The words become a quiet rhythm; the heart turns inward.</p>
+      <p>When you are ready, press <em>Begin Prayer</em>. The spacebar carries you forward.</p>
+    </section>
+
+    <!-- The traditional fifteen-decade Rosary — a distinct, quieter path
+         offered at the foot of the page, apart from today's mystery. -->
+    <section class="full-rosary">
+      <span class="rule rule-tight" aria-hidden="true"></span>
+      <p class="full-rosary-eyebrow">The Complete Rosary</p>
+      <p class="full-rosary-text">
+        Pray all fifteen decades in one sitting — the Joyful, the Sorrowful,
+        and the Glorious mysteries together, as the Rosary was prayed of old.
+      </p>
+      <a href="prayer.html?rosary=full" class="full-rosary-btn">Begin the Fifteen Decades</a>
+    </section>
+
+    <p class="home-footer">Ad Iesum per Mariam</p>
+
+  </main>
+
+  <script>
+    /* Diagnostic — only with ?diag=1. Shows exactly what this browser
+       reports, so the qutebrowser scaling can be solved with real numbers
+       instead of guesswork. Invisible to everyone else. */
+    (function () {
+      if (!/[?&]diag=1/.test(location.search)) return;
+      try {
+        var z = document.documentElement.style.zoom || "(unset)";
+        var probe = document.createElement("div");
+        probe.style.cssText = "position:fixed;top:0;left:0;width:100px;height:100px";
+        document.body.appendChild(probe);
+        var measured = probe.getBoundingClientRect().width;
+        probe.remove();
+        var rows = [
+          ["userAgent", navigator.userAgent],
+          ["matches /QtWebEngine/", /QtWebEngine/i.test(navigator.userAgent || "")],
+          ["window.devicePixelRatio", window.devicePixelRatio],
+          ["screen.width x height", screen.width + " x " + screen.height],
+          ["window.innerWidth x innerHeight", window.innerWidth + " x " + window.innerHeight],
+          ["window.__lrScale (applied)", window.__lrScale],
+          ["documentElement.style.zoom", z],
+          ["CSS zoom honored?", measured === 100 ? "no (100px stayed 100)" : "yes (100px measured " + measured + ")"],
+          ["localStorage usable?", (function(){ try{ localStorage.setItem("__t","1"); localStorage.removeItem("__t"); return "yes"; }catch(e){ return "NO — blocked"; } })()]
+        ];
+        var box = document.createElement("pre");
+        box.style.cssText = "position:fixed;inset:auto 16px 16px 16px;z-index:99999;margin:0;padding:16px;background:#0b0907;color:#ece1c6;border:1px solid #c9a961;font:13px/1.6 monospace;white-space:pre-wrap;max-height:60vh;overflow:auto";
+        box.textContent = "LUX ROSARII — qutebrowser diagnostic\n\n" +
+          rows.map(function (r) { return r[0] + ":\n  " + r[1]; }).join("\n\n") +
+          "\n\nTell Claude these values. (Remove ?diag=1 to hide.)";
+        document.body.appendChild(box);
+      } catch (e) {}
+    })();
+  </script>
+
+  <script src="app.js?v=37"></script>
+  <script>
+    // ---- Home page wiring ---------------------------------------------------
+    (function initHome() {
+      const today = LuxRosarii.getMysteryForDate(new Date());
+      let selected = today;
+
+      const NAMES = {
+        joyful:    "The Joyful Mysteries",
+        sorrowful: "The Sorrowful Mysteries",
+        glorious:  "The Glorious Mysteries",
+        luminous:  "The Luminous Mysteries"
+      };
+
+      const dateEl    = document.getElementById("today-date");
+      const nameEl    = document.getElementById("today-mystery-name");
+      const toggleEl  = document.getElementById("mystery-toggle");
+      const optionsEl = document.getElementById("mystery-options");
+      const beginEl   = document.getElementById("begin-btn");
+      const optionBtns = optionsEl.querySelectorAll(".mystery-option");
+
+      // Render today's date in the small caps line at the top of the card.
+      try {
+        const d = new Date();
+        dateEl.textContent = d.toLocaleDateString("en-US", {
+          weekday: "long", month: "long", day: "numeric"
+        });
+      } catch (e) {
+        // Fall back to "Today" if the locale isn't supported.
+      }
+
+      function syncSelection() {
+        nameEl.textContent  = NAMES[selected];
+        beginEl.setAttribute("href", "prayer.html?mystery=" + encodeURIComponent(selected));
+        optionBtns.forEach(b => {
+          b.classList.toggle("is-active", b.dataset.mystery === selected);
+        });
+      }
+
+      toggleEl.addEventListener("click", () => {
+        const open = optionsEl.classList.toggle("is-open");
+        toggleEl.setAttribute("aria-expanded", String(open));
+      });
+
+      optionBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          selected = btn.dataset.mystery;
+          syncSelection();
+        });
+      });
+
+      syncSelection();
+    })();
+
+    // ---- Pope's intention for the current month ---------------------------
+    (async function showPopeIntention() {
+      const section = document.getElementById("pope-intention");
+      if (!section) return;
+      try {
+        const res = await fetch("data/pope-intentions.json");
+        if (!res.ok) return;
+        const all = await res.json();
+        const now = new Date();
+        const yyyy = now.getFullYear();
+        const mm = String(now.getMonth() + 1).padStart(2, "0");
+        const entry = all[yyyy + "-" + mm];
+        if (!entry) return;
+
+        const monthName = now.toLocaleString("en-US", { month: "long" });
+        document.getElementById("pope-intention-month").textContent =
+          monthName + " " + yyyy;
+        document.getElementById("pope-intention-title").textContent = entry.title;
+        document.getElementById("pope-intention-text").textContent  = entry.text;
+        section.hidden = false;
+      } catch (e) {
+        // Silently fail.
+      }
+    })();
+  </script>
+
+</body>
+</html>
