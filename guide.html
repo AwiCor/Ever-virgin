@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learn the Rosary — Lux Rosarii</title>
+  <meta name="description" content="A gentle, interactive guide to praying the Holy Rosary — every bead, every prayer, every mystery, walked step by step." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+
+  <script>
+    /* Same qutebrowser / QtWebEngine HiDPI compensation as the home page —
+       see index.html for the full explanation. */
+    (function () {
+      try {
+        var d = document.documentElement;
+        var isQWE = /QtWebEngine/i.test(navigator.userAgent || "");
+        if (isQWE) d.className += (d.className ? " " : "") + "is-qtwebengine";
+        var override = null;
+        var m = location.search.match(/[?&]zoom=([0-9](?:\.[0-9]+)?)/);
+        if (m) { override = parseFloat(m[1]); try { localStorage.setItem("lr.zoom", m[1]); } catch (e) {} }
+        if (override == null) {
+          try { var ls = localStorage.getItem("lr.zoom"); if (ls != null) override = parseFloat(ls); } catch (e) {}
+        }
+        var scale = 1;
+        if (override != null && !isNaN(override)) {
+          scale = Math.min(2.5, Math.max(1, override));
+        } else if (isQWE && (window.devicePixelRatio || 1) <= 1.01) {
+          var sw = (window.screen && screen.width) || 0;
+          if (sw >= 2560) scale = Math.min(2, Math.max(1.25, Math.round((sw / 1440) * 20) / 20));
+        }
+        window.__lrScale = scale;
+        if (scale > 1) d.style.zoom = scale;
+      } catch (e) { /* never let this break the page */ }
+    })();
+  </script>
+
+  <link rel="stylesheet" href="styles.css?v=39" />
+</head>
+<body>
+
+  <div class="home-bg" aria-hidden="true"></div>
+
+  <main class="guide-wrap">
+
+    <header class="guide-mast">
+      <h1 class="site-title">Lux Rosarii</h1>
+      <nav class="site-nav" aria-label="Site">
+        <a href="index.html">Pray</a>
+        <a href="guide.html" class="is-current" aria-current="page">Learn the Rosary</a>
+      </nav>
+    </header>
+
+    <!-- ============ HERO ============ -->
+    <section class="guide-hero">
+      <p class="guide-eyebrow">A guide for beginners &amp; returners</p>
+      <h2 class="guide-title">The Path of the Rosary</h2>
+      <p class="guide-lede"><span class="versal">W</span>hether you are new to the
+        Catholic faith, learning to pray, or returning after a long time away —
+        welcome. The Rosary asks nothing of you but a little time and an open
+        heart. This page walks the whole path with you, bead by bead.</p>
+      <p class="guide-lede">There is no test and no way to fail. The beads
+        themselves will carry the counting, so your heart is free to rest in
+        the mysteries — scenes from the life of Jesus, seen through the eyes
+        of his mother.</p>
+    </section>
+
+    <div class="guide-quote">
+      <blockquote>To recite the Rosary is nothing other than to contemplate
+        with Mary the face of Christ.</blockquote>
+      <cite>Pope St. John Paul II, Rosarium Virginis Mariae, §3</cite>
+    </div>
+
+    <!-- ============ BEFORE YOU BEGIN ============ -->
+    <section class="guide-section" aria-labelledby="gt-before">
+      <div class="guide-section-head reveal">
+        <span class="rule" aria-hidden="true"></span>
+        <h2 class="guide-section-title" id="gt-before">Before You Begin</h2>
+      </div>
+      <div class="guide-tiles reveal">
+        <div class="guide-tile">
+          <h3>You need very little</h3>
+          <p>A rosary helps you keep count, but your ten fingers work just as
+            well. A quiet corner, a candle if you like — none of it is
+            required. Only the willingness to be still.</p>
+        </div>
+        <div class="guide-tile">
+          <h3>It takes 15–20 minutes</h3>
+          <p>A full five decades, prayed unhurried. Short on time? Pray a
+            single decade — one Our Father, ten Hail Marys, one mystery held
+            in the heart. That is a true Rosary prayer.</p>
+        </div>
+        <div class="guide-tile">
+          <h3>Distraction is normal</h3>
+          <p>Every mind wanders. When yours does, simply return — to the words,
+            to the mystery, to the bead between your fingers. The return
+            itself is prayer.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ THE MAP ============ -->
+    <section class="guide-section guide-section-map" aria-labelledby="gt-map">
+      <div class="guide-section-head reveal">
+        <span class="rule" aria-hidden="true"></span>
+        <h2 class="guide-section-title" id="gt-map">Walk the Beads</h2>
+        <p class="guide-section-sub">The rosary is a small pilgrimage you can
+          hold in one hand. Follow the stations below — or click any bead on
+          the map to travel there.</p>
+      </div>
+
+      <div class="guide-map-layout">
+        <div class="guide-map">
+          <svg id="guide-rosary" viewBox="0 0 460 680" xmlns="http://www.w3.org/2000/svg"
+               role="img" aria-label="Map of a rosary: a loop of beads with a medal, five beads and a crucifix hanging below">
+            <!-- connectors -->
+            <circle cx="230" cy="225" r="170" class="gconnector" />
+            <line x1="230" y1="395" x2="230" y2="404" class="gconnector" />
+            <line x1="230" y1="428" x2="230" y2="596" class="gconnector" />
+            <!-- the golden thread — traces the route travelled so far.
+                 Drop: crucifix up to the medal. Loop: counterclockwise from
+                 the medal, matching the order the beads are prayed. -->
+            <path id="g-trace-drop" class="gtrace" d="M 230 596 L 230 428"
+                  stroke-dasharray="0 172" />
+            <path id="g-trace-loop" class="gtrace"
+                  d="M 230 395 A 170 170 0 0 0 230 55 A 170 170 0 0 0 230 395"
+                  stroke-dasharray="0 1072" />
+            <!-- medallion -->
+            <rect id="g-medallion" class="gmedallion" x="211" y="404" width="38" height="24" rx="3">
+              <title>The medal — Hail, Holy Queen is prayed here at the end</title>
+            </rect>
+            <!-- drop beads (generated beads for the loop are injected into #g-loop) -->
+            <circle id="g-d1-of"    class="gbead" cx="230" cy="452" r="10"><title>Large bead — announce the first mystery, then the Our Father</title></circle>
+            <circle id="g-creed-4"  class="gbead" cx="230" cy="487" r="6"><title>Small bead — third Hail Mary, for charity</title></circle>
+            <circle id="g-creed-3"  class="gbead" cx="230" cy="514" r="6"><title>Small bead — second Hail Mary, for hope</title></circle>
+            <circle id="g-creed-2"  class="gbead" cx="230" cy="541" r="6"><title>Small bead — first Hail Mary, for faith</title></circle>
+            <circle id="g-creed-1"  class="gbead" cx="230" cy="572" r="10"><title>Large bead — the opening Our Father</title></circle>
+            <!-- crucifix -->
+            <g id="g-cross" class="gcross-shape">
+              <title>The crucifix — the Sign of the Cross and the Creed begin here</title>
+              <line x1="230" y1="596" x2="230" y2="662" />
+              <line x1="209" y1="618" x2="251" y2="618" />
+            </g>
+            <g id="g-loop"></g>
+          </svg>
+          <p class="guide-map-hint">Click any bead to travel there &middot; ← → keys walk the path &middot; the gold thread is the way you have come</p>
+          <div class="guide-progress" aria-hidden="true">
+            <div class="guide-progress-fill" id="guide-progress-fill"></div>
+          </div>
+        </div>
+
+        <div class="guide-station" id="guide-station" aria-live="polite">
+          <!-- Station renderer fills this in -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ THE MYSTERIES ============ -->
+    <section class="guide-section" aria-labelledby="gt-mysteries">
+      <div class="guide-section-head reveal">
+        <span class="rule" aria-hidden="true"></span>
+        <h2 class="guide-section-title" id="gt-mysteries">The Twenty Mysteries</h2>
+        <p class="guide-section-sub">Each day of the week, the Church dwells on
+          one set of five scenes from the life of Christ. Open a set to see
+          its mysteries and the grace each one asks for.</p>
+      </div>
+      <div class="guide-mysteries reveal" id="guide-mysteries">
+        <!-- Cards are filled by JS from data/mysteries.json -->
+      </div>
+      <p class="gs-note" style="text-align:center; margin-top:26px;">
+        In Advent and Christmastide, Sundays turn to the Joyful mysteries;
+        in Lent, to the Sorrowful. The home page always chooses the right
+        set for today.
+      </p>
+    </section>
+
+    <!-- ============ QUESTIONS ============ -->
+    <section class="guide-section" aria-labelledby="gt-faq">
+      <div class="guide-section-head reveal">
+        <span class="rule" aria-hidden="true"></span>
+        <h2 class="guide-section-title" id="gt-faq">Questions Along the Way</h2>
+      </div>
+      <div class="guide-faq reveal">
+        <details class="gf-item">
+          <summary>Why do we repeat the same prayer so many times?</summary>
+          <p class="gf-body">Because that is how love speaks. St. John Paul II
+            answered this directly: two friends who spend much time together
+            begin to share the same habits and words, and Christ himself asked
+            Peter three times, "Do you love me?" The repetition of the Hail
+            Mary is not a formula to get through — it is a heartbeat. Each one
+            turns on the name of Jesus at its centre, "the centre of gravity"
+            of the whole prayer, while your mind rests on the mystery.</p>
+        </details>
+        <details class="gf-item">
+          <summary>Do I have to finish all five decades?</summary>
+          <p class="gf-body">No. One decade prayed with attention is worth more
+            than five raced through. Many people weave single decades into
+            their day — on a walk, on a commute, waiting for the kettle. The
+            Church has never made the Rosary a burden; it is an invitation.</p>
+        </details>
+        <details class="gf-item">
+          <summary>What do I "do" during the Hail Marys?</summary>
+          <p class="gf-body">The words are the surface; the mystery is the
+            depth. While your lips pray, let your imagination stand inside the
+            scene — the angel's greeting, the stable, the cross, the empty
+            tomb. See it as Mary saw it. If a single word or image holds you,
+            stay there. The counting will keep itself.</p>
+        </details>
+        <details class="gf-item">
+          <summary>What if I don't have rosary beads?</summary>
+          <p class="gf-body">Pray on your fingers — ten of them, one decade.
+            Beads are a servant of the prayer, not a requirement. (Though if
+            you can, a blessed rosary is a beautiful companion to own; any
+            parish can point you to one.)</p>
+        </details>
+        <details class="gf-item">
+          <summary>Which mysteries do I pray today?</summary>
+          <p class="gf-body">Joyful on Monday and Saturday; Sorrowful on
+            Tuesday and Friday; Glorious on Wednesday and Sunday; Luminous on
+            Thursday. In Advent, Sundays turn Joyful; in Lent, Sorrowful. You
+            don't need to memorise this — the <a href="index.html">home
+            page</a> chooses for you every day.</p>
+        </details>
+        <details class="gf-item">
+          <summary>Is the Rosary in the Bible?</summary>
+          <p class="gf-body">Its heart is. The Our Father is Jesus' own prayer
+            (Matthew 6). The first half of the Hail Mary is spoken by the
+            angel Gabriel and by Elizabeth (Luke 1). And the mysteries are
+            simply the Gospel itself, scene by scene — which is why the
+            Rosary has been called "a compendium of the Gospel."</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ============ SOURCES ============ -->
+    <section class="guide-section" aria-labelledby="gt-sources">
+      <div class="guide-section-head reveal">
+        <span class="rule rule-tight" aria-hidden="true"></span>
+        <h2 class="guide-section-title" id="gt-sources" style="font-size:22px;">To Go Deeper</h2>
+      </div>
+      <p class="guide-sources reveal">
+        <a href="https://www.usccb.org/how-to-pray-the-rosary" target="_blank" rel="noopener noreferrer">How to Pray the Rosary — USCCB</a><br>
+        <a href="https://www.vatican.va/content/john-paul-ii/en/apost_letters/2002/documents/hf_jp-ii_apl_20021016_rosarium-virginis-mariae.html" target="_blank" rel="noopener noreferrer">Rosarium Virginis Mariae — St. John Paul II, vatican.va</a><br>
+        <a href="https://hallow.com/blog/how-to-pray-the-rosary/" target="_blank" rel="noopener noreferrer">How to Pray the Rosary — Hallow</a>
+      </p>
+    </section>
+
+    <!-- ============ CTA ============ -->
+    <section class="guide-cta">
+      <span class="rule" aria-hidden="true"></span>
+      <p class="guide-cta-line">You are ready. Today the Church prays</p>
+      <p class="guide-cta-mystery" id="guide-cta-mystery">the Holy Rosary</p>
+      <a href="prayer.html?guided=1" class="begin-btn" id="guide-begin-btn">Begin the Guided Rosary</a>
+      <p class="guide-cta-quiet">
+        <a href="prayer.html" id="guide-begin-plain">or pray it in silence&nbsp;→</a>
+      </p>
+    </section>
+
+    <p class="home-footer" style="text-align:center;">Ad Iesum per Mariam</p>
+
+  </main>
+
+  <script src="app.js?v=40"></script>
+  <script>
+  (function initGuide() {
+    "use strict";
+
+    function esc(str) {
+      return String(str)
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+    }
+
+    var NAMES = {
+      joyful:    "The Joyful Mysteries",
+      sorrowful: "The Sorrowful Mysteries",
+      glorious:  "The Glorious Mysteries",
+      luminous:  "The Luminous Mysteries"
+    };
+    var SET_ADJ = { joyful: "Joyful", sorrowful: "Sorrowful",
+                    glorious: "Glorious", luminous: "Luminous" };
+    var ORDINALS = ["First", "Second", "Third", "Fourth", "Fifth"];
+
+    var todayKey = window.LuxRosarii
+      ? LuxRosarii.getMysteryForDate(new Date()) : "glorious";
+
+    // ------------------------------------------------------------------
+    // Build the 54 loop beads — same geometry as the prayer page widget,
+    // scaled up. Bead ids: g-d{n}-of / g-d{n}-hm-{m}.
+    // ------------------------------------------------------------------
+    (function buildLoop() {
+      var g = document.getElementById("g-loop");
+      if (!g) return;
+      var SVG_NS = "http://www.w3.org/2000/svg";
+      var cx = 230, cy = 225, R = 170;
+      var TOTAL = 54, STEP = 360 / TOTAL;
+      var FIRST_ANGLE = 90 - STEP / 2;
+      function classify(i) {
+        if (i === 11) return { id: "g-d2-of", isOF: true };
+        if (i === 22) return { id: "g-d3-of", isOF: true };
+        if (i === 33) return { id: "g-d4-of", isOF: true };
+        if (i === 44) return { id: "g-d5-of", isOF: true };
+        var dec, hm;
+        if (i <= 10)      { dec = 1; hm = i; }
+        else if (i <= 21) { dec = 2; hm = i - 11; }
+        else if (i <= 32) { dec = 3; hm = i - 22; }
+        else if (i <= 43) { dec = 4; hm = i - 33; }
+        else              { dec = 5; hm = i - 44; }
+        return { id: "g-d" + dec + "-hm-" + hm, isOF: false };
+      }
+      var ORD = ["first", "second", "third", "fourth", "fifth"];
+      for (var i = 1; i <= TOTAL; i++) {
+        var info = classify(i);
+        var rad = (FIRST_ANGLE - (i - 1) * STEP) * Math.PI / 180;
+        var c = document.createElementNS(SVG_NS, "circle");
+        c.setAttribute("cx", (cx + R * Math.cos(rad)).toFixed(2));
+        c.setAttribute("cy", (cy + R * Math.sin(rad)).toFixed(2));
+        c.setAttribute("r", info.isOF ? 10 : 6);
+        c.setAttribute("id", info.id);
+        c.setAttribute("class", "gbead");
+        // Native tooltip naming each bead's place on the path.
+        var t = document.createElementNS(SVG_NS, "title");
+        var parts = info.id.split("-");   // g-d{n}-of | g-d{n}-hm-{m}
+        var dec = parseInt(parts[1].slice(1), 10);
+        t.textContent = info.isOF
+          ? "Large bead — the " + ORD[dec - 1] + " decade begins here"
+          : "Small bead — Hail Mary " + parts[3] + " of 10, " + ORD[dec - 1] + " decade";
+        c.appendChild(t);
+        g.appendChild(c);
+      }
+    })();
+
+    // ------------------------------------------------------------------
+    // Station definitions. Each: title, where (bead location in the hand),
+    // body (HTML), prayers (keys into prayers.json "en"), why {text, source},
+    // beads (SVG ids lit at this station).
+    // ------------------------------------------------------------------
+    function decadeBeads(n) {
+      var ids = ["g-d" + n + "-of"];
+      for (var i = 1; i <= 10; i++) ids.push("g-d" + n + "-hm-" + i);
+      return ids;
+    }
+
+    var STATIONS = [
+      {
+        title: "The Sign of the Cross",
+        where: "Holding the crucifix",
+        body: "Take the crucifix between your fingers. Touch your forehead, your heart, your left shoulder, then your right, as you say the words. With this small gesture you place the whole prayer — and yourself — inside the life of God.",
+        prayers: ["sign_of_the_cross"],
+        why: { text: "Every Catholic prayer begins here: in the name of the Trinity, under the sign of Christ's cross.", source: "USCCB — How to Pray the Rosary" },
+        beads: ["g-cross"]
+      },
+      {
+        title: "The Apostles' Creed",
+        where: "Still holding the crucifix",
+        body: "Still holding the crucifix, profess the ancient summary of the faith. Don't worry about feeling every word — you are joining a confession the Church has made for almost two thousand years. It states, plainly, everything the mysteries will show you.",
+        prayers: ["apostles_creed"],
+        beads: ["g-cross"]
+      },
+      {
+        title: "Our Father",
+        where: "On the first large bead above the crucifix",
+        body: "Move up to the first large bead and pray the prayer Jesus himself taught. It is traditionally offered for the intentions of the Holy Father. <em>A note on the colours:</em> when the Rosary is led in a group, the leader prays the cream text and everyone answers with the gold — prayed alone, you simply say it all.",
+        prayers: ["our_father"],
+        why: { text: "The Our Father lifts the mind toward the Father, and makes meditation an ecclesial experience — even prayed alone, you never pray alone.", source: "Rosarium Virginis Mariae, §32" },
+        beads: ["g-creed-1"]
+      },
+      {
+        title: "Three Hail Marys",
+        where: "On the three small beads",
+        body: "On each of the three small beads, one Hail Mary — traditionally asking for a growth in <em>faith</em>, in <em>hope</em>, and in <em>charity</em>: the three virtues on which everything else stands.",
+        prayers: ["hail_mary"],
+        note: "Said three times — once for each bead, once for each virtue.",
+        beads: ["g-creed-2", "g-creed-3", "g-creed-4"]
+      },
+      {
+        title: "Glory Be",
+        where: "On the large bead below the medal",
+        body: "A single, luminous sentence of praise to the Trinity. Short as it is, the Church calls this doxology the summit of Christian prayer — you will return to it at the end of every decade, like a refrain.",
+        prayers: ["glory_be"],
+        why: { text: "The Trinitarian doxology is the high-point of contemplation — the goal of all Christian prayer.", source: "Rosarium Virginis Mariae, §34" },
+        beads: ["g-d1-of"]
+      },
+      {
+        title: "Announce the First Mystery",
+        where: "Same bead — at the threshold of the loop",
+        body: "", // filled dynamically with today's mystery
+        why: { text: "Announcing the mystery opens up a scenario on which to focus attention — then a moment of silence lets the mystery settle before the words begin.", source: "Rosarium Virginis Mariae, §29–31" },
+        beads: ["g-d1-of"]
+      },
+      {
+        title: "Our Father",
+        where: "Same bead",
+        body: "With the mystery before your eyes, pray the Our Father. It roots the decade in the Father's love before you turn, with Mary, toward her Son.",
+        prayers: ["our_father"],
+        beads: ["g-d1-of"]
+      },
+      {
+        title: "Ten Hail Marys",
+        where: "Around the first ten small beads of the loop",
+        body: "Now the heart of the Rosary. One Hail Mary on each small bead, ten in all, while you hold the mystery in your imagination. Let the words become a quiet rhythm underneath the scene — you are watching it unfold while resting your hand in Mary's.",
+        prayers: ["hail_mary"],
+        note: "Said ten times — one bead at a fingertip for each.",
+        why: { text: "The centre of gravity of the Hail Mary is the name of Jesus. Repetition here is the language of love — saying again what one would never tire of saying.", source: "Rosarium Virginis Mariae, §26, §33" },
+        beads: decadeBeads(1)
+      },
+      {
+        title: "Glory Be & the Fatima Prayer",
+        where: "On the chain, before the next large bead",
+        body: "Close the decade with the Glory Be. Many then add the prayer Our Lady taught the children at Fatima in 1917 — optional, but beloved. One decade is now complete: you have walked a fifth of the loop.",
+        prayers: ["glory_be", "fatima_prayer"],
+        beads: ["g-d2-of"]
+      },
+      { decade: 2, beads: decadeBeads(2) },
+      { decade: 3, beads: decadeBeads(3) },
+      { decade: 4, beads: decadeBeads(4) },
+      { decade: 5, beads: decadeBeads(5) },
+      {
+        title: "Hail, Holy Queen",
+        where: "On the medal, where the loop closes",
+        body: "The five decades are complete — the loop has brought you back to the medal. Gather everything into this tender hymn to Mary, followed by its versicle and response.",
+        prayers: ["hail_holy_queen"],
+        versicle: true,
+        beads: ["g-medallion"]
+      },
+      {
+        title: "The Closing Prayer",
+        where: "Still at the medal",
+        body: "One final collect draws the whole Rosary together — asking that what you have contemplated, you may imitate and obtain.",
+        prayers: ["closing_prayer"],
+        note: "Many also add the Prayer to St. Michael and an intercession to the saint of the day — the prayer screen includes both.",
+        beads: ["g-medallion"]
+      },
+      {
+        title: "The Sign of the Cross",
+        where: "Holding the crucifix once more",
+        body: "End where you began: at the cross. Make the Sign of the Cross slowly, and take a breath before you rise. The Rosary is finished — but carry one image from today's mysteries with you into the rest of the day. That is how the prayer keeps praying.",
+        prayers: ["sign_of_the_cross"],
+        beads: ["g-cross"]
+      }
+    ];
+
+    // ------------------------------------------------------------------
+    // Data loading — reuse the site's own prayer + mystery data.
+    // ------------------------------------------------------------------
+    var prayersEN = null;
+    var mysteriesData = null;
+    var dataSettled = false;   // true once the fetch below resolves or fails
+
+    function prayerHTML(p) {
+      if (p && typeof p === "object" && (p.lead || p.resp)) {
+        return '<div class="gs-prayer">' + esc(p.lead || "") +
+               (p.resp ? ' <span class="prayer-resp">' + esc(p.resp) + "</span>" : "") +
+               "</div>";
+      }
+      if (typeof p === "string") return '<div class="gs-prayer">' + esc(p) + "</div>";
+      return "";
+    }
+
+    function todaysMystery(n) {
+      // n = 1..5; returns {name, fruit} of today's set, if data has loaded.
+      var set = mysteriesData && mysteriesData[todayKey];
+      var m = set && set.mysteries && set.mysteries[n - 1];
+      return m || null;
+    }
+
+    function stationHTML(st, idx) {
+      var num = idx + 1, total = STATIONS.length;
+      var title = st.title, where = st.where, body = st.body || "";
+      var prayers = "", why = "", note = "", paintingHTML = "";
+
+      // A window onto the mystery: the announcement and each decade show
+      // today's painting for that mystery, framed as on the prayer page.
+      if (mysteriesData && (st.decade || idx === 5)) {
+        var pm = todaysMystery(st.decade || 1);
+        var pt = pm && pm.paintings && pm.paintings[0];
+        if (pt) {
+          paintingHTML = '<figure class="gs-painting">' +
+            '<img src="' + esc(pt.url) + '" loading="lazy" alt="' +
+              esc(pt.title + " by " + pt.artist) + '">' +
+            '<figcaption>' + esc(pt.title) + " · " + esc(pt.artist) +
+            "</figcaption></figure>";
+        }
+      }
+
+      if (st.decade) {
+        var ord = ORDINALS[st.decade - 1];
+        title = "The " + ord + " Decade";
+        where = "Continue around the loop";
+        var m = todaysMystery(st.decade);
+        body = "The pattern now repeats: announce the " + ord.toLowerCase() +
+               " mystery, pray one Our Father on the large bead, ten Hail " +
+               "Marys on the small beads, and close with the Glory Be and " +
+               "Fatima Prayer." +
+               (m ? " Today that mystery is <em>" + esc(m.name) + "</em> — " +
+                    "prayed for the fruit of " + esc(m.fruit.replace(/^Fruit[^:]*:\s*/i, "")) + "."
+                  : "");
+      }
+
+      if (idx === 5) { // Announce the First Mystery
+        var m1 = todaysMystery(1);
+        body = "Name the scene you are about to enter. " +
+          (m1 ? "Today the Church prays " + esc(NAMES[todayKey]) +
+                ", so you would say: <em>“The First " + esc(SET_ADJ[todayKey]) +
+                " Mystery — " + esc(m1.name) + ".”</em> "
+              : "For example: <em>“The First Glorious Mystery — The Resurrection.”</em> ") +
+          "Then pause. A few seconds of silence, a verse of Scripture if you " +
+          "have one, and let the scene rise before your eyes.";
+      }
+
+      (st.prayers || []).forEach(function (key) {
+        if (prayersEN && prayersEN[key]) prayers += prayerHTML(prayersEN[key]);
+      });
+      if (st.versicle && prayersEN && prayersEN.closing_versicle) {
+        prayers += '<div class="gs-prayer">℣. ' + esc(prayersEN.closing_versicle.leader) +
+                   '<br><span class="prayer-resp">℟. ' + esc(prayersEN.closing_versicle.response) + "</span></div>";
+      }
+      // Only surface the data-load hint once the fetch has actually settled
+      // and failed — otherwise it flashes on first paint while data loads.
+      if ((st.prayers || []).length && !prayersEN && dataSettled) {
+        note = "Open this page through a local server (see README) or the live site to see the prayer text here.";
+      }
+      if (st.note) note = st.note;
+      if (st.why) {
+        why = '<p class="gs-why">“' + esc(st.why.text) + '”' +
+              '<span class="gs-why-source">' + esc(st.why.source) + "</span></p>";
+      }
+
+      return '<div class="guide-station-inner">' +
+        '<p class="gs-count">Station ' + num + " of " + total + "</p>" +
+        '<h3 class="gs-title">' + esc(title) + "</h3>" +
+        '<p class="gs-where">' + esc(where || "") + "</p>" +
+        '<p class="gs-body">' + body + "</p>" +
+        paintingHTML +
+        prayers +
+        (note ? '<p class="gs-note">' + esc(note) + "</p>" : "") +
+        why +
+        '<div class="guide-station-nav">' +
+          '<button type="button" class="gs-btn" id="gs-prev"' + (idx === 0 ? " disabled" : "") + ">‹ Back</button>" +
+          '<button type="button" class="gs-btn" id="gs-next"' + (idx === total - 1 ? " disabled" : "") + ">" +
+            (idx === total - 1 ? "Amen" : "Continue ›") + "</button>" +
+        "</div></div>";
+    }
+
+    // ------------------------------------------------------------------
+    // Walker state + bead lighting
+    // ------------------------------------------------------------------
+    var stationEl = document.getElementById("guide-station");
+    var progressEl = document.getElementById("guide-progress-fill");
+    var current = 0;
+
+    // How far the golden thread has been walked at each station, as
+    // fractions of [drop path, loop path]. The drop runs crucifix → medal;
+    // the loop runs one full circle from the medal, the way it is prayed.
+    var DROP_LEN = 168, LOOP_LEN = 2 * Math.PI * 170;
+    var PATH_PROGRESS = [
+      [0.02, 0],  // 1  sign — at the crucifix
+      [0.05, 0],  // 2  creed
+      [0.15, 0],  // 3  our father (first large bead)
+      [0.66, 0],  // 4  three hail marys
+      [0.87, 0],  // 5  glory be (large bead below the medal)
+      [0.93, 0],  // 6  announce first mystery
+      [0.97, 0],  // 7  our father — still on the large bead at the threshold
+      [1, 0.185], // 8  ten hail marys (first decade walked)
+      [1, 0.215], // 9  glory be & fatima → second large bead
+      [1, 0.41],  // 10 second decade
+      [1, 0.61],  // 11 third decade
+      [1, 0.80],  // 12 fourth decade
+      [1, 1],     // 13 fifth decade — the loop closes
+      [1, 1],     // 14 hail holy queen (medal)
+      [1, 1],     // 15 closing prayer
+      [1, 1]      // 16 sign of the cross
+    ];
+
+    function traceMap(idx) {
+      var p = PATH_PROGRESS[idx] || [0, 0];
+      var drop = document.getElementById("g-trace-drop");
+      var loop = document.getElementById("g-trace-loop");
+      if (drop) drop.setAttribute("stroke-dasharray",
+        (p[0] * DROP_LEN).toFixed(1) + " " + (DROP_LEN + 4));
+      if (loop) loop.setAttribute("stroke-dasharray",
+        (p[1] * LOOP_LEN).toFixed(1) + " " + (LOOP_LEN + 4));
+    }
+
+    function lightMap(idx) {
+      // Everything before `idx` is walked; the station's own beads breathe.
+      var walked = {};
+      for (var i = 0; i < idx; i++) {
+        (STATIONS[i].beads || []).forEach(function (id) { walked[id] = true; });
+      }
+      var currentIds = {};
+      (STATIONS[idx].beads || []).forEach(function (id) { currentIds[id] = true; });
+      document.querySelectorAll("#guide-rosary .gbead, #guide-rosary .gmedallion, #guide-rosary .gcross-shape")
+        .forEach(function (el) {
+          el.classList.toggle("walked", !!walked[el.id] && !currentIds[el.id]);
+          el.classList.toggle("current", !!currentIds[el.id]);
+        });
+    }
+
+    function show(idx) {
+      current = Math.max(0, Math.min(idx, STATIONS.length - 1));
+      stationEl.innerHTML = stationHTML(STATIONS[current], current);
+      lightMap(current);
+      traceMap(current);
+      if (progressEl) {
+        progressEl.style.width =
+          ((current / (STATIONS.length - 1)) * 100).toFixed(1) + "%";
+      }
+      var prev = document.getElementById("gs-prev");
+      var next = document.getElementById("gs-next");
+      if (prev) prev.addEventListener("click", function () { show(current - 1); });
+      if (next) next.addEventListener("click", function () { show(current + 1); });
+    }
+
+    // Bead → station jumps. Map each bead id to the FIRST station that owns
+    // it — except the decade Our-Father beads, which always jump to their
+    // decade's start (matching the prayer page's rosary widget), not to the
+    // preceding Glory Be that happens to light the same bead first.
+    var beadToStation = {};
+    STATIONS.forEach(function (st, i) {
+      (st.beads || []).forEach(function (id) {
+        if (beadToStation[id] == null) beadToStation[id] = i;
+      });
+    });
+    STATIONS.forEach(function (st, i) {
+      if (st.decade) beadToStation["g-d" + st.decade + "-of"] = i;
+    });
+    beadToStation["g-d1-of"] = 5;   // first mystery's announcement
+    document.getElementById("guide-rosary").addEventListener("click", function (e) {
+      var el = e.target.closest(".gbead, .gmedallion, .gcross-shape");
+      if (!el) return;
+      var idx = beadToStation[el.id];
+      if (idx != null) show(idx);
+    });
+
+    // Arrow keys move along the path (vertical keys left to the browser).
+    window.addEventListener("keydown", function (e) {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if (e.key === "ArrowRight") { e.preventDefault(); show(current + 1); }
+      if (e.key === "ArrowLeft")  { e.preventDefault(); show(current - 1); }
+    });
+
+    // ------------------------------------------------------------------
+    // Mysteries cards + CTA — from data/mysteries.json
+    // ------------------------------------------------------------------
+    var CARD_META = [
+      { key: "joyful",    days: "Monday · Saturday",
+        blurb: "The joy that radiates from the Incarnation — the angel's greeting, the birth in Bethlehem, the child found in his Father's house." },
+      { key: "luminous",  days: "Thursday",
+        blurb: "The light of Christ's public life — from the Jordan to the Upper Room, the Kingdom proclaimed and the Eucharist given." },
+      { key: "sorrowful", days: "Tuesday · Friday",
+        blurb: "The Passion, walked step by step — the garden, the pillar, the thorns, the cross: the depth of God's love made visible." },
+      { key: "glorious",  days: "Wednesday · Sunday",
+        blurb: "The triumph of Easter and the hope of heaven — resurrection, ascension, the Spirit poured out, and Mary crowned." }
+    ];
+
+    function renderMysteryCards() {
+      var wrap = document.getElementById("guide-mysteries");
+      if (!wrap) return;
+      wrap.innerHTML = CARD_META.map(function (meta) {
+        var set = mysteriesData && mysteriesData[meta.key];
+        var isToday = meta.key === todayKey;
+        var list = "";
+        if (set && set.mysteries) {
+          list = '<ol class="gm-list">' + set.mysteries.map(function (m) {
+            return "<li><span><span class=\"gm-mystery-name\">" + esc(m.name) + "</span>" +
+                   (m.fruit ? '<span class="gm-fruit">' + esc(m.fruit) + "</span>" : "") +
+                   "</span></li>";
+          }).join("") + "</ol>";
+        }
+        return '<details class="gm-card"' + (isToday ? " open" : "") + ">" +
+          "<summary>" +
+            // spans, not <p> — a summary's content model doesn't allow
+            // paragraphs; the classes carry display:block instead.
+            '<span class="gm-name">' + esc(NAMES[meta.key]) +
+              (isToday ? '<span class="gm-today">Today</span>' : "") + "</span>" +
+            '<span class="gm-days">' + esc(meta.days) + "</span>" +
+            '<span class="gm-blurb">' + esc(meta.blurb) + "</span>" +
+          "</summary>" + list +
+        "</details>";
+      }).join("");
+    }
+
+    function renderCTA() {
+      var nameEl = document.getElementById("guide-cta-mystery");
+      var btn = document.getElementById("guide-begin-btn");
+      var plain = document.getElementById("guide-begin-plain");
+      if (nameEl) nameEl.textContent = NAMES[todayKey];
+      if (btn) btn.setAttribute("href",
+        "prayer.html?mystery=" + encodeURIComponent(todayKey) + "&guided=1");
+      if (plain) plain.setAttribute("href",
+        "prayer.html?mystery=" + encodeURIComponent(todayKey));
+    }
+
+    // Scroll-reveal: each supporting section rises as the visitor reaches
+    // it. Falls back to instantly-visible when IntersectionObserver is
+    // missing; prefers-reduced-motion collapses the transition globally.
+    (function reveals() {
+      var els = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach(function (el) { el.classList.add("is-in"); });
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) {
+            en.target.classList.add("is-in");
+            io.unobserve(en.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      els.forEach(function (el) { io.observe(el); });
+    })();
+
+    // ------------------------------------------------------------------
+    // Boot: render immediately (works even if fetch fails), then enrich.
+    // ------------------------------------------------------------------
+    renderCTA();
+    renderMysteryCards();
+    show(0);
+
+    Promise.all([
+      fetch("data/prayers.json",   { cache: "no-cache" }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
+      fetch("data/mysteries.json", { cache: "no-cache" }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
+    ]).then(function (results) {
+      dataSettled = true;
+      if (results[0] && results[0].en) prayersEN = results[0].en;
+      if (results[1]) mysteriesData = results[1];
+      renderMysteryCards();
+      show(current);
+    });
+  })();
+  </script>
+
+</body>
+</html>
